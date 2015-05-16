@@ -18,21 +18,10 @@ Add the location where you downloaded the python libraries into PYTHONPATH e.g. 
 export PYTHONPATH=${PYTHONPATH}:~/Desktop/ABElectronics_Python3_Libraries/ServoPi/
 ```
 
-The library requires python-smbus to be installed.
-```
-sudo apt-get update
-sudo apt-get install libi2c-dev
+The library requires i2c to be enabled and python-smbus to be installed.
 
-wget http://ftp.de.debian.org/debian/pool/main/i/i2c-tools/i2c-tools_3.1.0.orig.tar.bz2     # download i2c-tools source
-tar xf i2c-tools_3.1.0.orig.tar.bz2
-cd i2c-tools-3.1.0/py-smbus
-mv smbusmodule.c smbusmodule.c.orig
-wget https://raw.githubusercontent.com/abelectronicsuk/ABElectronics_Python3_Libraries/master/smbusmodule.c
+Follow the tutorial at [https://www.abelectronics.co.uk/i2c-raspbian-wheezy/info.aspx](https://www.abelectronics.co.uk/i2c-raspbian-wheezy/info.aspx) to enable i2c and install python-smbus for python 3.
 
-sudo bash
-python3 setup.py build
-python3 setup.py install
-```
 The example python files in /ABElectronics_Python3_Libraries/ServoPi/ will now run from the terminal.
 
 Functions:

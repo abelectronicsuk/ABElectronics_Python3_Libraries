@@ -2,7 +2,7 @@
 try:
     import smbus
 except ImportError:
-    raise ImportError("python-smbus not found'")
+    raise ImportError("python-smbus not found Install with 'sudo apt-get install python3-smbus'")
 import re
 
 """

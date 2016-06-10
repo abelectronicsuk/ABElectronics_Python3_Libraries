@@ -68,7 +68,7 @@ Usage
 
 To use the Delta-Sigma library in your code you must first import the library:
 ```
-from ABE_DeltaSigmaPi import DeltaSigma
+from ABE_ADCDifferentialPi import ADCDifferentialPi
 ```
 Now import the helper class
 ```

@@ -66,7 +66,7 @@ Set the conversion mode for the adc
 Usage
 ====
 
-To use the Delta-Sigma library in your code you must first import the library:
+To use the ADC Differential Pi library in your code you must first import the library:
 ```
 from ABE_ADCDifferentialPi import ADCDifferentialPi
 ```
@@ -78,7 +78,7 @@ Next you must initialise the adc object and smbus:
 ```
 i2c_helper = ABEHelpers()
 bus = i2c_helper.get_smbus()
-adc = DeltaSigma(bus, 0x68, 0x69, 18)
+adc = ADCDifferentialPi(bus, 0x68, 0x69, 18)
 ```
 The first argument is the smbus object folled by the two I2C addresses of the ADC chips. The values shown are the default addresses of the ADC board.
 

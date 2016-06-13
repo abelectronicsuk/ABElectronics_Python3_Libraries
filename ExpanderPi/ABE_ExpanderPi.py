@@ -48,36 +48,47 @@ class ADC:
         voltage = (self.__adcrefvoltage / 4096) * raw
         return voltage
 
-    def readADCraw(self, channel):
+    def read_adc_voltage(self, channel, mode):
+        """
+        Read the voltage from the selected channel on the ADC
+        Channel = 1 to 8
+        Mode = 0 or 1 -  0 = single ended, 1 = differential
+        """
+        if (mode < 0) or (mode > 1):
+            print ('mode needs to be 0 (single ended) or 1 (differential)')
+            return 0
+        if (channel > 4) and (mode == 1):
+            print ('ADC channel needs to be 1 to 4 when using differential mode')
+            return 0
+        if ((channel > 8) or (channel < 1)):
+            print ('ADC channel needs to be 1 to 8')
+            return 0
+        raw = self.readADCraw(channel, mode)
+        voltage = (self.__adcrefvoltage / 4096) * raw
+        return voltage
+
+    def readADCraw(self, channel, mode):
         """
         Read the raw value from the selected channel on the ADC
         Channel = 1 to 8
+        Mode = 0 or 1 -  0 = single ended, 1 = differential
         """
-
+        if (mode < 0) or (mode > 1):
+            print ('mode needs to be 0 (single ended) or 1 (differential)')
+            return 0
+        if (channel > 4) and (mode == 1):
+            print ('ADC channel needs to be 1 to 4 when using differential mode')
+            return 0
         if ((channel > 8) or (channel < 1)):
             print ('ADC channel needs to be 1 to 8')
             return 0.0
         channel = channel - 1
-        r = self.__spiADC.xfer2([4 + (channel >> 2), (channel & 3) << 6, 0])
+        if (mode == 0):
+            r = self.__spiADC.xfer2([6 + (channel >> 2), (channel & 3) << 6, 0])
+        if (mode == 1):
+            r = self.__spiADC.xfer2([4 + (channel >> 2), (channel & 3) << 6, 0])
         ret = ((r[1] & 0x0F) << 8) + (r[2])
         return ret
-
-    def set_adc_refvoltage(self, voltage):
-        """
-        set the reference voltage for the analogue to digital converter.
-        By default the ADC uses an onboard 4.096V voltage reference.  If you
-        choose to use an external voltage reference you will need to
-        use this method to set the ADC reference voltage to match the
-        supplied reference voltage.
-        The reference voltage must be less than or equal to the voltage on
-        the Raspberry Pi 5V rail.
-        """
-
-        if (voltage >= 0.0) and (voltage <= 5.5):
-            self.__adcrefvoltage = voltage
-        else:
-            print ('reference voltage out of range')
-        return
 
 
 class DAC:

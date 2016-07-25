@@ -1,7 +1,7 @@
 AB Electronics UK Servo Pi Python 3 Library
 =====
 
-Python 3 Library to use with Servo Pi Raspberry Pi expansion board from http://www.abelectronics.co.uk
+Python 3 Library to use with Servo Pi Raspberry Pi expansion board from https://www.abelectronics.co.uk
 
 Install
 ====

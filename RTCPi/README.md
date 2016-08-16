@@ -77,7 +77,7 @@ Next you must initialise the RTC object with the smbus object using the helpers:
 ```
 i2c_helper = ABEHelpers()
 bus = i2c_helper.get_smbus()
-rtc = RTC()
+rtc = RTC(bus)
 ```
 Set the current time in ISO 8601 format:
 ```

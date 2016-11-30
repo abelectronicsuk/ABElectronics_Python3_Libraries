@@ -3,6 +3,7 @@
 from ABE_ADCDACPi import ADCDACPi
 import time
 import math
+import RPi.GPIO as GPIO
 
 """
 ================================================
@@ -15,6 +16,14 @@ run with: python3 demo-dacsinewave.py
 # this demo uses the set_dac_raw method to generate a sine wave from a
 # predefined set of values
 """
+
+# The ADCDAC Pi uses GPIO pin 22 to control the DAC.  
+# This will need to be turned off for the DAC to operate correctly.
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(22, GPIO.OUT)
+GPIO.output(22, False)
 
 adcdac = ADCDACPi(1) # create an instance of the ADCDAC Pi with a DAC gain set to 1
 

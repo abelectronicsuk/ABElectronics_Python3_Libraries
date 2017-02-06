@@ -10,7 +10,8 @@ import struct
 """
 ================================================
 ABElectronics IO Pi V2 32-Channel Port Expander
-Version 1.0 Created 29/03/2015
+Version 1.0 Created 20/05/2014
+Version 1.1 16/11/2014 updated code and functions to PEP8 format
 
 Requires python smbus to be installed
 
@@ -35,18 +36,6 @@ class ADC:
     __spiADC.max_speed_hz = (50000)
 
     # public methods
-
-    def read_adc_voltage(self, channel):
-        """
-        Read the voltage from the selected channel on the ADC
-        Channel = 1 to 8
-        """
-
-        if ((channel > 8) or (channel < 1)):
-            print ('ADC channel needs to be 1 to 8')
-        raw = self.readADCraw(channel)
-        voltage = (self.__adcrefvoltage / 4096) * raw
-        return voltage
 
     def read_adc_voltage(self, channel, mode):
         """
@@ -89,6 +78,23 @@ class ADC:
             r = self.__spiADC.xfer2([4 + (channel >> 2), (channel & 3) << 6, 0])
         ret = ((r[1] & 0x0F) << 8) + (r[2])
         return ret
+
+    def set_adc_refvoltage(self, voltage):
+        """
+        set the reference voltage for the analogue to digital converter.
+        By default the ADC uses an onboard 4.096V voltage reference.  If you
+        choose to use an external voltage reference you will need to
+        use this method to set the ADC reference voltage to match the
+        supplied reference voltage.
+        The reference voltage must be less than or equal to the voltage on
+        the Raspberry Pi 5V rail.
+        """
+
+        if (voltage >= 0.0) and (voltage <= 5.5):
+            self.__adcrefvoltage = voltage
+        else:
+            print ('reference voltage out of range')
+        return
 
 
 class DAC:
@@ -580,31 +586,11 @@ class RTC:
         self._bus.write_byte_data(self.__rtcaddress, self.CONTROL, self.__rtcconfig)
         return
 
-    def __bcd_to_dec(self,bcd):
-        """
-        internal method for converting BCD formatted number to decimal
-        """
-        dec = 0
-        for a in (bcd >> 4, bcd):
-            for b in (1, 2, 4 ,8):
-                if a & 1:
-                    dec += b
-                a >>= 1
-            dec *= 10
-        return dec / 10    
-    
-    def __dec_to_bcd(self,dec):
-        """
-        internal method for converting decimal formatted number to BCD
-        """
-        bcd = 0
-        for a in (dec // 10, dec % 10):
-            for b in (8, 4, 2, 1):
-                if a >= b:
-                    bcd += 1
-                    a -= b
-                bcd <<= 1
-        return bcd >> 1
+    def __bcd_to_dec(self, x):
+        return x - 6 * (x >> 4)
+
+    def __dec_to_bcd(self, val):
+        return ((val / 10 * 16) + (val % 10))
 
     def __get_century(self, val):
         if len(val) > 2:

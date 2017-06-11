@@ -11,7 +11,7 @@ Install
 To download to your Raspberry Pi type in terminal: 
 
 ```
-git clone https://github.com/abelectronicsuk/ABElectronics_Python3_Libraries.git
+git clone https://github.com/abelectronicsuk/ABElectronics_Python_Libraries.git
 ```
 The Expander Pi library is located in the ExpanderPi directory
 
@@ -19,10 +19,6 @@ Add the location where you downloaded the python libraries into PYTHONPATH e.g. 
 ```
 export PYTHONPATH=${PYTHONPATH}:~/Desktop/ABElectronics_Python3_Libraries/ExpanderPi/
 ```
-
-The library requires i2c to be enabled and python-smbus to be installed.
-
-Follow the tutorial at [https://www.abelectronics.co.uk/i2c-raspbian-wheezy/info.aspx](https://www.abelectronics.co.uk/i2c-raspbian-wheezy/info.aspx) to enable i2c and install python-smbus for python 3.
 
 The example python files in /ABElectronics_Python3_Libraries/ExpanderPi/ will now run from the terminal.
 
@@ -35,6 +31,7 @@ The ADC class controls the functions on the 12 bit 8 channel Analogue to Digital
 
 Functions:
 ----------
+
 
 ```
 read_adc_voltage(channel, mode) 
@@ -94,6 +91,7 @@ In single ended mode the channel number corresponds to the number on the Expande
 | 8     | differential | CH7 = IN-  CH8 = IN+ |
 
 
+
 ```
 set_adc_refvoltage(voltage) 
 ```   
@@ -131,13 +129,14 @@ Read the voltage from the ADC channel 1 in single ended mode at 1 second interva
 
 ```
 while (True):
-  print adc.read_adc_voltage(1, 0)
+  print adc.read_adc_voltage(1,0)
   time.sleep(1)
 ```
 
 # Class: DAC #
 
 The DAC class controls the 2 channel 12 bit digital to analogue converter.  The DAC uses an internal voltage reference and can output a voltage between 0 and 2.048V.
+A gain setting allows you to increase the voltage to between 0 and 4.095V when gain is set to 2
 
 Functions:
 ----------
@@ -147,7 +146,7 @@ set_dac_voltage(channel, voltage)
 ```
 
 Set the voltage for the selected channel on the DAC  
-**Parameters:** channel - 1 or 2,  voltage can be between 0 and 2.047 volts  
+**Parameters:** channel - 1 or 2,  voltage can be between 0 and 2.047 volts when gain is set to 1 or 0 and 4.095 volts when gain is set to 2
 **Returns:** null 
 
 ```
@@ -157,6 +156,7 @@ set_dac_raw(channel, value)
 Set the raw value from the selected channel on the DAC  
 **Parameters:** channel - 1 or 2,value int between 0 and 4095  
 **Returns:** null 
+
 Usage
 ====
 
@@ -166,10 +166,10 @@ To use the DAC class in your code you must first import the library:
 from ABE_ExpanderPi import DAC
 ```
 
-Next you must initialise the DAC object:
+Next you must initialise the DAC object with a gain setting of 1 or 2:
 
 ```
-dac = DAC()
+dac = DAC(1)
 ```
 
 Set the channel and voltage for the DAC output.
@@ -203,7 +203,7 @@ Sets the IO direction for the specified IO port
 **Returns:** null
 
 ```
-set_port_pullups(self, port, value)
+set_port_pullups(port, value)
 ```
 
 Set the internal 100K pull-up resistors for the selected IO port  
@@ -219,7 +219,7 @@ Write to an individual pin 1 - 16
 **Returns:** null
 
 ```
-write_port(self, port, value)
+write_port(port, value)
 ```
 
 Write to all pins on the selected port  
@@ -331,16 +331,11 @@ To use the IO Pi library in your code you must first import the library:
 ```
 from ABE_ExpanderPi import IO
 ```
-Now import the helper class
-```
-from ABE_helpers import ABEHelpers
-```
-Next you must initialise the IO object with the smbus object using the helpers:
+
+Next you must initialise the IO object:
 
 ```
-i2c_helper = ABEHelpers()
-bus = i2c_helper.get_smbus()
-io = IO(bus)
+io = IO()
 ```
 
 We will read the inputs 1 to 8 from the I/O bus so set port 0 to be inputs and enable the internal pull-up resistors 
@@ -352,7 +347,7 @@ io.set_port_pullups(0, 0xFF)
 
 You can now read the pin 1 with:
 ```
-print 'Pin 1: ' + str(io.read_pin(1))
+print ('Pin 1: ' + str(io.read_pin(1)))
 ```
 
 # Class: RTC #
@@ -393,12 +388,29 @@ Disable the square-wave output on the SQW pin.
 **Returns:** null
 
 ```
-set_frequency()
+set_frequency(frequency)
 ```
 
 Set the frequency for the square-wave output on the SQW pin.   
 **Parameters:** frequency - options are: 1 = 1Hz, 2 = 4.096KHz, 3 = 8.192KHz, 4 = 32.768KHz   
 **Returns:** null
+
+```
+write_memory(address, valuearray)
+```
+Write to the memory on the ds1307. The ds1307 contains 56-Byte, battery-backed RAM with Unlimited Writes  
+**Parameters:** address - 0x08 to 0x3F  
+valuearray - byte array containing data to be written to memory  
+**Returns:** null
+
+```
+read_memory(address, length)
+```
+Read from the memory on the ds1307  
+**Parameters:** address - 0x08 to 0x3F 
+length - up to 32 bytes.  
+length can not exceed the available address space.  
+**Returns:** array of bytes
 
 Usage
 ====
@@ -408,16 +420,11 @@ To use the RTC class in your code you must first import the library:
 ```
 from ABE_ExpanderPi import RTC
 ```
-Now import the helper class
-```
-from ABE_helpers import ABEHelpers
-```
-Next you must initialise the RTC object with the smbus object using the helpers:
+
+Next you must initialise the RTC object:
 
 ```
-i2c_helper = ABEHelpers()
-bus = i2c_helper.get_smbus()
-rtc = RTC(bus)
+rtc = RTC()
 ```
 
 Set the date using ISO 8601 format - YYYY-MM-DDTHH:MM:SS :
@@ -437,6 +444,6 @@ Read the current date and time from the RTC at 1 second intervals:
 
 ```
 while (True):
-  print rtc.read_date()
+  print (rtc.read_date())
   time.sleep(1)
 ```

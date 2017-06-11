@@ -1,15 +1,16 @@
 #!/usr/bin/python3
 
 from ABE_ExpanderPi import IO
-from ABE_helpers import ABEHelpers
 import time
 
 """
 ================================================
 ABElectronics Expander Pi | Digital I/O Interrupts Demo
-Version 1.0 Created 29/03/2015
+Version 1.0 Created 21/08/2014
+Version 1.1 Updated 11/06/2017 updated to include changes to Expander Pi library
 
-run with: python3 demo-iowrite.py
+Requires python smbus to be installed with: sudo apt-get install python3-smbus
+run with: sudo python3 demo-iowrite.py
 ================================================
 
 This example uses the write_pin and writeBank methods to switch the pins
@@ -19,9 +20,7 @@ Initialise the IO class and create an instance called io.
 """
 
 
-i2c_helper = ABEHelpers()
-bus = i2c_helper.get_smbus()
-io = IO(bus)
+io = IO()
 
 # We will write to the pins 9 to 16 so set port 1 to be outputs turn off
 # the pins

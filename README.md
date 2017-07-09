@@ -1,6 +1,10 @@
 AB Electronics Python Libraries
 =====
 
+__This version of the Python Libraries is no longer under active development. For new python projects we recommend using our current Python library which is compatible with Python versions 2 and 3.__  
+
+__Current Version: https://github.com/abelectronicsuk/ABElectronics_Python_Libraries__
+
 Python 3.x Libraries to work with Raspberry Pi expansion boards from https://www.abelectronics.co.uk
 
 Python 3.x with smbus
@@ -27,5 +31,5 @@ This directory contains RTC Pi Python Library and demos to use with the RTC Pi h
 ### ServoPi
 This directory contains ServoPi Python Library  and read voltage demo to use with the ServoPi https://www.abelectronics.co.uk/p/44/Servo-PWM-Pi and Sero Pi Zero https://www.abelectronics.co.uk/p/72/Servo-PWM-Pi-Zero
 
-##Helper class
+### Helper class
 We have now added ABE_helpers.py class to the libraries which use Python smbus to enable a single bus instance to be used with multiple expansion boards and to avoid smbus conflicts. 
